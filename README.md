@@ -39,7 +39,7 @@ The Sponsorship-platform is a web application designed to connect sponsors with 
 ## 🚀 How to Run the Project
 Clone the repository to your local machine:
 
-### git clone https://github.com/yourusername/Sponsorship-platform.git
+### git clone https://github.com/770navyasharma/Sponsorship-platform.git
 
 Navigate to the project directory:
 

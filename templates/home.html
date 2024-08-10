@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponser Influencer Engagement Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo&family=Baloo+Bhai+2:wght@400..800&family=Baloo+Bhaijaan+2:wght@400..800&family=Dancing+Script:wght@500&family=Exo+2:wght@600&family=Jost:wght@300&family=Montserrat:wght@600&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Quicksand:wght@600&family=Roboto:wght@300&family=Whisper&display=swap" rel="stylesheet">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color: #7f4fa9;
+            font-family: "Baloo Bhai 2", sans-serif;
+        }
+        .logo-with-title{
+            width: 85%;
+            display: flex;
+            justify-content: space-evenly;
+            height: 300px;           
+            /* margin: -25px;  */
+            gap: 10px;
+        }
+        .logo-section{
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .logo-section img{
+            height: 70%;
+            border-radius: 26px;
+        }
+        .title{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        .description-section{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            margin-top: -40px;
+        }
+        .description{
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+        .login-options{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .login-options button{
+            background-color: #e7e7e7;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .login-options button:hover{
+            background-color: #e1b582;
+        }
+        a{
+            text-decoration: none;
+            color: #470e0e;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-with-title">
+        <div class="logo-section">
+            <img src="{{ url_for('static',filename='icons.png') }}" alt="logo">
+        </div>
+        <div class="title">
+            <h2>InfluenceX</h2>
+        </div>
+    </div>
+    <div class="description-section">
+        <p class="description">InfluenceX is the ultimate platform connecting top influencers with leading sponsors. Whether you're looking to amplify your brand's reach or monetize your influence, AdVanguard is your go-to hub for impactful collaborations. Join us and be part of a network where innovation meets influence.</p>
+    </div>
+    <div class="login-options">
+        <button type="submit"><a href="/admin">Admin Login</a></button>
+        <button type="submit"><a href="/user">User Login</a></button>
+    </div>
+</body>
+</html>

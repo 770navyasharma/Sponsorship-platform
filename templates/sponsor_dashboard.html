@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Dashboard</title>
+    <link rel="stylesheet" href="../static/sponsor.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class="navbar">
+        <a href="#profile">Profile</a>
+        <a href="#campaigns">Campaigns</a>
+        <a href="#find">Find</a>
+        <a href="#stats">Stats</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="content">
+        <div id="profile" class="tab-content">
+            <h2>Welcome, {{ sponsor_name }}</h2>
+            <div id="profile-content">
+                <p>Company Name: <span>{{ sponsor_name }}</span></p>
+                <p>Industry: <span>{{ sponsor_industry }}</span></p>
+                <p>Budget: <span>{{ sponsor_budget }}</span></p>
+            </div>
+            <div id="ongoing-campaigns">
+                <h3>Ongoing Campaigns</h3>
+                {% for campaign in ongoing_campaigns %}
+                <div class="campaign-bar">
+                    <span>{{ campaign.name }}</span>
+                    <button class="view-campaign-btn" data-campaign-id="{{ campaign.id }}">View</button>
+                </div>
+                {% endfor %}
+            </div>
+            <div id="new-ad-requests">
+                <h3>New Ad Requests</h3>
+                {% for ad_request in pending_ad_requests %}
+                <div class="ad-request-bar">
+                    <span>Campaign: {{ ad_request.campaign.name }}</span>
+                    <span>Influencer: {{ ad_request.influencer.user.username }}</span>
+                    <button class="view-influencer-btn" data-ad-request-id="{{ ad_request.id }}">View</button>
+                    <form action="{{ url_for('sponsor_dashboard') }}" method="POST" style="display: inline;">
+                        <input type="hidden" name="ad_request_id" value="{{ ad_request.id }}">
+                        <button type="submit" name="action" value="accept">Accept</button>
+                        <button type="submit" name="action" value="reject">Reject</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            <div id="your-ad-requests">
+                <h3>Your Ad Requests</h3>
+                {% for ad_request in your_requests %}
+                <div class="ad-request-bar">
+                    <span>Campaign: {{ ad_request.campaign.name }}</span>
+                    <span>Influencer: {{ ad_request.influencer.user.username }}</span>
+                    <button class="view-request-btn" data-ad-request-id="{{ ad_request.id }}">View</button>
+                </div>
+                {% endfor %}
+            </div>
+            
+        </div>
+
+        <div id="campaign-details-modal" class="modal">
+            <h4>Campaign Details</h4>
+            <div id="campaign-details">
+                <!-- Campaign details will be populated here -->
+            </div>
+            <a href="#" rel="modal:close">Close</a>
+        </div>
+    
+        <div id="influencer-details-modal" class="modal">
+            <h4>Influencer Details</h4>
+            <div id="influencer-details">
+                <!-- Influencer details will be populated here -->
+            </div>
+            <a href="#" rel="modal:close">Close</a>
+        </div>
+
+        <div id="ad-request-details-modal" class="modal">
+            <h4>Ad Request Details</h4>
+            <div id="ad-request-details">
+                <!-- Ad Request details will be populated here -->
+            </div>
+            <a href="#" rel="modal:close">Close</a>
+        </div>
+
+        <div id="campaigns" class="tab-content">
+            <h3>Campaigns</h3>
+            <div class="row" id="campaigns-container">
+                {% for campaign in campaigns %}
+                <div class="col-md-4">
+                    <div class="campaign-card">
+                        <h4>{{ campaign.name }}</h4>
+                        <p>{{ campaign.description }}</p>
+                        <p><strong>Budget:</strong> ${{ campaign.budget }}</p>
+                        <p><strong>Start Date:</strong> {{ campaign.start_date }}</p>
+                        <p><strong>End Date:</strong> {{ campaign.end_date }}</p>
+                        <button class="btn btn-primary update-campaign-btn" data-campaign-id="{{ campaign.id }}">Update</button>
+                        <button class="btn btn-danger delete-campaign-btn" data-campaign-id="{{ campaign.id }}">Delete</button>
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- Button for creating a new campaign -->
+            </div>
+            <button id="createCampaignBtn" class="btn btn-success">+</button>
+        </div>
+    
+        <!-- Update Campaign Modal -->
+        <div id="updateCampaignModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h5>Update Campaign</h5>
+                <form id="updateCampaignForm">
+                    <input type="hidden" id="campaignId" name="campaignId">
+                    <div class="form-group mb-3">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" required></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="budget">Budget</label>
+                        <input type="number" id="budget" name="budget" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="start_date">Start Date</label>
+                        <input type="date" id="start_date" name="start_date" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="end_date">End Date</label>
+                        <input type="date" id="end_date" name="end_date" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Create Campaign Modal -->
+        <div class="modal" id="createCampaignModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create New Campaign</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createCampaignForm">
+                            <div class="form-group mb-3">
+                                <label for="createName">Name</label>
+                                <input type="text" class="form-control" id="createName" name="name" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="createDescription">Description</label>
+                                <textarea class="form-control" id="createDescription" name="description" required></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="createBudget">Budget</label>
+                                <input type="number" class="form-control" id="createBudget" name="budget" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="createStartDate">Start Date</label>
+                                <input type="date" class="form-control" id="createStartDate" name="start_date" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="createEndDate">End Date</label>
+                                <input type="date" class="form-control" id="createEndDate" name="end_date" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="creategoals">Goals</label>
+                                <textarea class="form-control" id="creategoals" name="goals" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create Campaign</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="find" class="tab-content">
+            <div class="container">
+                <h2>Find Influencers</h2>
+                <div class="form-group">
+                    <input type="text" id="searchInput" placeholder="Search for influencers by name or niche" class="form-control mb-2">
+                    <button id="searchButton" class="btn btn-primary">Search</button>
+                </div>
+                <div id="influencerResults" class="row">
+                    <!-- Search results will be appended here -->
+                </div>
+            </div>
+        </div>
+    
+        <!-- View Influencer Modal -->
+        <div id="viewInfluencerModal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Influencer Details</h5>
+                        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body" id="influencerDetails">
+                        <!-- Influencer details will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Create Ad Request Modal -->
+        <div id="createAdRequestModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeCreateAdRequestModal">&times;</span>
+                <h2>Create Ad Request</h2>
+                <form id="createAdRequestForm">
+                    <input type="hidden" id="selectedInfluencerId" name="influencer_id">
+                    <div class="form-group">
+                        <label for="campaignSelect">Select Campaign</label>
+                        <select id="campaignSelect" name="campaign_id" required>
+                            <!-- Options will be populated via JavaScript -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="requirements">Requirements</label>
+                        <textarea id="requirements" name="requirements" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentAmount">Payment Amount</label>
+                        <input type="number" id="paymentAmount" name="payment_amount" required>
+                    </div>
+                    <button type="submit">Submit Request</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="stats" class="tab-content" style="display: none;">
+            <h2>Stats Dashboard</h2>
+            <!-- Sub-navigation for stats -->
+            <div class="stats-nav">
+                <a href="#" class="stats-option" data-stat="campaigns">Campaigns Overview</a>
+                <a href="#" class="stats-option" data-stat="influencers">Influencers Performance</a>
+                <a href="#" class="stats-option" data-stat="requests">Ad Requests</a>
+            </div>
+            <div id="statsContent" style="height: 400px; width: 100%;">
+                <!-- Dynamic stats content will be loaded here -->
+            </div>
+        </div>
+        
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <script src="../static/js/sponsor.js"></script>
+</body>
+</html>

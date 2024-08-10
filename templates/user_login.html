@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles2.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <h2>User Login</h2>
+        <form method="POST" action="/user">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div class="register-options">
+            <a href="/register_sponsor">Register as Sponsor</a>
+            <a href="/register_influencer">Register as Influencer</a>
+        </div>
+    </div>
+    <div id="message" class="message"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const messageElement = document.getElementById('message');
+
+            // Function to display a message
+            function displayMessage(message, type) {
+                messageElement.textContent = message;
+                messageElement.className = `message ${type}`;
+            }
+
+            // Check if there is a message to display from the server
+            const serverMessage = '{{ message }}';
+            const serverMessageType = '{{ message_type }}';
+            if (serverMessage) {
+                displayMessage(serverMessage, serverMessageType);
+            }
+        });
+
+    </script>
+</body>
+</html>

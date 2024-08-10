@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        /* Add some basic styles */
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .container {
+            margin: 20px;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .chart {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="/admin_dashboard">Info</a>
+        <a href="#" onclick="showSection('find')">Find</a>
+        <a onclick="showSection('stats')">Stats</a>
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="container">
+        <div id="info" class="section">
+            <h2>Ongoing Campaigns</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Budget</th>
+                        <th>Visibility</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for campaign in ongoing_campaigns %}
+                    <tr>
+                        <td>{{ campaign.id }}</td>
+                        <td>{{ campaign.name }}</td>
+                        <td>{{ campaign.description }}</td>
+                        <td>{{ campaign.start_date }}</td>
+                        <td>{{ campaign.end_date }}</td>
+                        <td>{{ campaign.budget }}</td>
+                        <td>{{ campaign.visibility }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>Flagged Users/Campaigns</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Flagged Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in flagged_users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>Flagged</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div id="find" class="section active">
+            <h2>Search</h2>
+            <form action="/search" method="GET">
+                <input type="text" name="query" placeholder="Search...">
+                <select name="type">
+                    <option value="campaigns">Campaigns</option>
+                    <option value="sponsors">Sponsors</option>
+                    <option value="influencers">Influencers</option>
+                </select>
+                <button type="submit">Search</button>
+            </form>
+            {% if search_type == 'campaigns' %}
+                {% if campaigns %}
+                    <h3>Search Results</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Budget</th>
+                                <th>Visibility</th>
+                                <th>Goals</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for campaign in campaigns %}
+                            <tr>
+                                <td>{{ campaign.id }}</td>
+                                <td>{{ campaign.name }}</td>
+                                <td>{{ campaign.description }}</td>
+                                <td>{{ campaign.start_date }}</td>
+                                <td>{{ campaign.end_date }}</td>
+                                <td>{{ campaign.budget }}</td>
+                                <td>{{ campaign.visibility }}</td>
+                                <td>{{ campaign.goals }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No campaigns found.</p>
+                {% endif %}
+            {% elif search_type == 'sponsors' %}
+                {% if campaigns %}
+                    <h3>Search Results</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Company Name</th>
+                                <th>Industry</th>
+                                <th>Budget</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sponsor in campaigns %}
+                            <tr>
+                                <td>{{ sponsor.id }}</td>
+                                <td>{{ sponsor.company_name }}</td>
+                                <td>{{ sponsor.industry }}</td>
+                                <td>{{ sponsor.budget }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No sponsors found.</p>
+                {% endif %}
+            {% elif search_type == 'influencers' %}
+                {% if campaigns %}
+                    <h3>Search Results</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Category</th>
+                                <th>Niche</th>
+                                <th>Reach</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for influencer in campaigns %}
+                            <tr>
+                                <td>{{ influencer.id }}</td>
+                                <td>{{ influencer.category }}</td>
+                                <td>{{ influencer.niche }}</td>
+                                <td>{{ influencer.reach }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No influencers found.</p>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div id="stats" class="section">
+            <h2>Statistics</h2>
+            <button onclick="toggleStats('campaigns')">Campaigns</button>
+            <button onclick="toggleStats('users')">Users</button>
+            <button onclick="toggleStats('trends')">Trends</button>
+            <button onclick="toggleStats('distribution')">Distribution</button>
+            
+            <div id="campaigns-chart" class="chart-container" style="display: none;">
+                <canvas id="campaignsChart"></canvas>
+            </div>
+            <div id="users-chart" class="chart-container" style="display: none;">
+                <canvas id="usersChart"></canvas>
+            </div>
+            <div id="trends-chart" class="chart-container" style="display: none;">
+                <canvas id="trendsChart"></canvas>
+            </div>
+            <div id="distribution-chart" class="chart-container" style="display: none;">
+                <canvas id="distributionChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            var sections = document.querySelectorAll('.section');
+            sections.forEach(function(section) {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function toggleStats(type) {
+        const charts = ['campaigns', 'users', 'trends', 'distribution'];
+        charts.forEach(chart => {
+            document.getElementById(`${chart}-chart`).style.display = 'none';
+        });
+        document.getElementById(`${type}-chart`).style.display = 'block';
+        }
+
+        async function fetchData() {
+            const response = await fetch('/stats_data');
+            const data = await response.json();
+
+            const ctxCampaigns = document.getElementById('campaignsChart').getContext('2d');
+            new Chart(ctxCampaigns, {
+                type: 'bar',
+                data: {
+                    labels: data.campaign_data.labels,
+                    datasets: [{
+                        label: 'Campaigns',
+                        data: data.campaign_data.data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            const ctxUsers = document.getElementById('usersChart').getContext('2d');
+            new Chart(ctxUsers, {
+                type: 'pie',
+                data: {
+                    labels: data.user_data.labels,
+                    datasets: [{
+                        label: 'Users',
+                        data: data.user_data.data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Fetch and display trends data
+            const responseTrends = await fetch('/stats/campaign_trends');
+            const trendsData = await responseTrends.json();
+            const ctxTrends = document.getElementById('trendsChart').getContext('2d');
+            new Chart(ctxTrends, {
+                type: 'line',
+                data: {
+                    labels: trendsData.labels,
+                    datasets: [{
+                        label: 'Campaign Budget Trends',
+                        data: trendsData.data,
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Fetch and display user distribution data
+            const responseDistribution = await fetch('/stats/user_distribution');
+            const distributionData = await responseDistribution.json();
+            const ctxDistribution = document.getElementById('distributionChart').getContext('2d');
+            new Chart(ctxDistribution, {
+                type: 'doughnut',
+                data: {
+                    labels: distributionData.labels,
+                    datasets: [{
+                        label: 'User Distribution',
+                        data: distributionData.data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchData);
+    </script>
+</body>
+</html>

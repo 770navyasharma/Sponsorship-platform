@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='influencer.css') }}"> <!-- Include your custom CSS -->
+     <!-- Include Chart.js library -->
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#profile-section">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#influencer-find-section">Find</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#inf-logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Profile Section -->
+        <div id="profile-section" class="tab-content" data-influencer-id="{{ influencer_id }}">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="profile-card card">
+                        <!-- Ensure the profile picture is displayed correctly -->
+                        <img id="profile-picture" src="/static/woman.png" class="card-img-top" alt="Profile Picture">
+                        <div class="card-body">
+                            <h5 class="card-title">Welcome, <span id="profile-name">{{ influencer_name }}</span></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <h3>Active Campaigns</h3>
+                    <div id="active-campaigns-container">
+                        <!-- Active Campaigns will be dynamically inserted here -->
+                    </div>
+
+                    <h3 class="mt-4">New Requests</h3>
+                    <div id="new-requests-container">
+                        <!-- New Requests will be dynamically inserted here -->
+                        <div class="request-item" id="request-{{ request.campaign_id }}">
+                            <h4>{{ request.campaign_name }}</h4>
+                            <button class="btn btn-primary view-btn" data-campaign-id="{{ request.campaign_id }}">View</button>
+                            <button class="btn btn-success accept-btn" data-campaign-id="{{ request.campaign_id }}">Accept</button>
+                            <button class="btn btn-danger reject-btn" data-campaign-id="{{ request.campaign_id }}">Reject</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal for Detailed View -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModalLabel">Campaign Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Campaign details will be dynamically inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Find Section -->
+    <div id="influencer-find-section" class="tab-content d-none">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="influencer-search-container mb-4">
+                    <form id="influencer-search-form">
+                        <div class="input-group">
+                            <input type="text" id="influencer-search-query" class="form-control" placeholder="Enter campaign name, description, or goals">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div id="influencer-campaign-results" class="mt-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Campaign Details Modal -->
+    <div class="modal fade" id="influencer-campaign-modal" tabindex="-1" role="dialog" aria-labelledby="influencerCampaignModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="influencerCampaignModalLabel">Campaign Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Description:</strong> <span id="influencer-campaign-description"></span></p>
+                    <p><strong>Goals:</strong> <span id="influencer-campaign-goals"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#influencer-request-modal">Request Collaboration</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Collaboration Modal -->
+    <div class="modal fade" id="influencer-request-modal" tabindex="-1" role="dialog" aria-labelledby="influencerRequestModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="influencerRequestModalLabel">Request Collaboration</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="influencer-request-form">
+                        <input type="hidden" id="influencer-request-campaign-id">
+                        <div class="form-group">
+                            <label for="influencer-request-message">Message</label>
+                            <textarea class="form-control" id="influencer-request-message" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="influencer-request-requirements">Requirements</label>
+                            <textarea class="form-control" id="influencer-request-requirements" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="influencer-request-payment">Payment Amount</label>
+                            <input type="number" class="form-control" id="influencer-request-payment">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="influencer-submit-request">Submit Request</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="inf-logout" class="tab-content d-none">
+            <p>Logging out...</p>
+        </div>
+        
+        
+    </div>
+
+    <!-- JS Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='js/influencer.js') }}"></script> <!-- Include your custom JS -->
+</body>
+</html>

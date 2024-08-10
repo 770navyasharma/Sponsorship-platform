@@ -1,0 +1,287 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.navbar {
+    overflow: hidden;
+    background-color: #333;
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar a.active {
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.content {
+    padding: 20px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.campaign-bar, .ad-request-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: background-color 0.3s;
+}
+.campaign-bar:hover, .ad-request-bar:hover {
+    background-color: #e9e9e9;
+}
+.campaign-bar button, .ad-request-bar button {
+    margin-left: 10px;
+}
+.campaign-container {
+    margin-bottom: 20px;
+}
+h3 {
+    margin-top: 20px;
+}
+.content {
+    padding: 20px;
+}
+
+.campaign-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+}
+
+#campaigns{
+    display: flex;
+    justify-content: center;
+}
+/* Center the modal vertically and horizontally */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 90%;
+    height: 600px;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px; /* Rounded corners */
+    width: 400px; /* Reduced width */
+    max-width: 90%; /* Ensures it looks good on smaller screens */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+.modal h5 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    color: #333;
+}
+
+.btn {
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-primary {
+    background-color: blue;
+    color: white;
+    border: none;
+}
+
+.btn-danger {
+    background-color: red;
+    color: white;
+    border: none;
+}
+
+/* Form inputs styling */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#createCampaignBtn{
+    margin-left: 50%;
+    height: 80px;
+    width: 80px;
+    font-size: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+}
+
+/* Modal background */
+/* Modal Background */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 80%;
+    overflow: auto;
+    width: 80%;
+    max-width: 600px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+/* Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header .close {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.modal-content {
+    width: 80%;
+    margin: auto;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+.modal-dialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.search-result-card {
+    margin-bottom: 15px;
+}
+.view-influencer-btn, .request-ad-btn {
+    margin: 5px;
+}
+.container {
+    margin-top: 20px;
+}
+
+.stats-nav {
+    margin-bottom: 20px;
+}
+
+.stats-nav a {
+    margin-right: 10px;
+    padding: 10px 15px;
+    background-color: #f1f1f1;
+    color: #333;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.stats-nav a:hover {
+    background-color: #ddd;
+}
+
+#statsContent canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+.view-request-btn, .view-campaign-btn, .view-influencer-btn {
+    margin-left: 10px;
+}

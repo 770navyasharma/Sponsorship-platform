@@ -9,7 +9,7 @@ To run this project, you need to have the following installed:
 - SQLite
 - HTML, CSS, JavaScript
 - Bootstrap
-- 
+
 ## 🚀 Project Overview
 The Sponsorship-platform is a web application designed to connect sponsors with influencers. The platform allows sponsors to create and manage campaigns, while influencers can apply to participate in these campaigns. It includes:
 
